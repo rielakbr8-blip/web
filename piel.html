@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piel Hosting — Lapisan Server yang Kokoh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;
+    --bg-elevated:#141B23;
+    --bg-card:#161D26;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --text:#E7E9EE;
+    --text-dim:#9AA4B2;
+    --text-faint:#5C6577;
+    --accent:#6C5CE7;
+    --accent-2:#00D9C0;
+    --accent-soft:rgba(108,92,231,0.14);
+    --danger:#FF6B6B;
+    --radius:14px;
+    --shadow: 0 20px 60px -20px rgba(0,0,0,0.5);
+  }
+  html[data-theme="light"]{
+    --bg:#F7F5F1;
+    --bg-elevated:#FFFFFF;
+    --bg-card:#FFFFFF;
+    --border:rgba(20,20,30,0.08);
+    --border-strong:rgba(20,20,30,0.14);
+    --text:#171A21;
+    --text-dim:#5B6270;
+    --text-faint:#8B92A0;
+    --accent:#5B4BD6;
+    --accent-2:#00A896;
+    --accent-soft:rgba(91,75,214,0.10);
+    --shadow: 0 20px 60px -25px rgba(30,20,60,0.25);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:background .4s ease,color .4s ease;
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  img,svg{display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  ::selection{background:var(--accent);color:#fff;}
+
+  /* focus visibility */
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px;border-radius:6px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- NAVBAR ---------- */
+  header{
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    background:color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom:1px solid var(--border);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;max-width:1180px;margin:0 auto;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-0.02em;}
+  .logo .stack{width:22px;height:18px;position:relative;}
+  .logo .stack span{
+    position:absolute;left:0;width:22px;height:5px;border-radius:2px;
+  }
+  .logo .stack span:nth-child(1){top:0;background:var(--accent);}
+  .logo .stack span:nth-child(2){top:6.5px;background:var(--accent-2);opacity:.85;}
+  .logo .stack span:nth-child(3){top:13px;background:var(--text-dim);opacity:.5;}
+
+  .nav-links{display:flex;gap:32px;align-items:center;}
+  .nav-links a{font-size:14.5px;color:var(--text-dim);font-weight:500;transition:color .2s;position:relative;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a::after{
+    content:'';position:absolute;left:0;bottom:-6px;width:0;height:1.5px;background:var(--accent-2);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+
+  .nav-actions{display:flex;align-items:center;gap:12px;}
+
+  .theme-toggle{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--border-strong);
+    background:var(--bg-elevated);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    color:var(--text);transition:transform .2s ease, background .2s;
+  }
+  .theme-toggle:hover{transform:rotate(15deg);}
+  .theme-toggle svg{width:17px;height:17px;}
+  .icon-sun{display:none;}
+  html[data-theme="light"] .icon-moon{display:none;}
+  html[data-theme="light"] .icon-sun{display:block;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:10px;font-weight:600;font-size:14px;
+    border:1px solid transparent;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, background .2s;
+    white-space:nowrap;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-discord{background:#5865F2;color:#fff;}
+  .btn-discord:hover{box-shadow:0 8px 24px -8px #5865F2;transform:translateY(-2px);}
+  .btn-whatsapp{background:#25D366;color:#08210f;}
+  .btn-whatsapp:hover{box-shadow:0 8px 24px -8px #25D366;transform:translateY(-2px);}
+  .btn-ghost{background:transparent;border:1px solid var(--border-strong);color:var(--text);}
+  .btn-ghost:hover{background:var(--bg-elevated);}
+  .btn-small{padding:8px 14px;font-size:13px;}
+
+  .hamburger{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--border-strong);background:var(--bg-elevated);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+  .hamburger span{width:16px;height:1.5px;background:var(--text);display:block;transition:.25s;}
+  .mobile-menu{
+    display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;
+    border-bottom:1px solid var(--border);background:var(--bg);
+  }
+  .mobile-menu a{padding:12px 4px;font-size:15px;color:var(--text-dim);border-bottom:1px solid var(--border);}
+  .mobile-menu .mm-actions{display:flex;gap:10px;margin-top:12px;}
+  .mobile-menu.open{display:flex;}
+
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .nav-actions .btn-discord,.nav-actions .btn-whatsapp{display:none;}
+    .hamburger{display:flex;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;padding:88px 24px 60px;overflow:hidden;
+  }
+  .hero-grid{
+    max-width:1180px;margin:0 auto;
+    display:grid;grid-template-columns:1.05fr 0.85fr;gap:56px;align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 12px;border-radius:100px;border:1px solid var(--border-strong);
+    font-size:12.5px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+    margin-bottom:22px;background:var(--bg-elevated);
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 0 3px var(--accent-soft);
+    animation:pulse-dot 2s infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+  .hero h1{
+    font-size:clamp(34px,5vw,54px);line-height:1.08;letter-spacing:-0.02em;font-weight:700;
+    margin-bottom:20px;
+  }
+  .hero h1 .accent-word{
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.lead{font-size:17px;color:var(--text-dim);max-width:480px;line-height:1.65;margin-bottom:32px;}
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+  .btn-lg{padding:13px 22px;font-size:15px;border-radius:12px;}
+
+  .hero-stats{display:flex;gap:32px;flex-wrap:wrap;}
+  .hero-stats .stat b{
+    display:block;font-family:'JetBrains Mono',monospace;font-size:22px;color:var(--text);
+  }
+  .hero-stats .stat span{font-size:12.5px;color:var(--text-faint);}
+
+  /* signature layer visual */
+  .layer-visual{
+    position:relative;height:380px;display:flex;align-items:center;justify-content:center;
+  }
+  .layer{
+    position:absolute;width:340px;max-width:88vw;height:78px;border-radius:16px;
+    border:1px solid var(--border-strong);
+    background:var(--bg-card);
+    box-shadow:var(--shadow);
+    display:flex;align-items:center;padding:0 20px;gap:14px;
+    opacity:0;transform:translateY(40px) scale(0.94);
+    animation:layer-in 0.8s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  .layer:nth-child(1){animation-delay:0.15s;z-index:5;}
+  .layer:nth-child(2){animation-delay:0.32s;z-index:4;top:78px;}
+  .layer:nth-child(3){animation-delay:0.49s;z-index:3;top:156px;}
+  .layer:nth-child(4){animation-delay:0.66s;z-index:2;top:234px;}
+  @keyframes layer-in{
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .layer-visual .layer{position:relative;margin-top:-1px;}
+  .layer-visual{flex-direction:column;}
+  .layer-icon{
+    width:38px;height:38px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+  }
+  .layer:nth-child(1) .layer-icon{background:var(--accent-soft);color:var(--accent);}
+  .layer:nth-child(2) .layer-icon{background:rgba(0,217,192,0.14);color:var(--accent-2);}
+  .layer:nth-child(3) .layer-icon{background:rgba(255,107,107,0.12);color:var(--danger);}
+  .layer:nth-child(4) .layer-icon{background:var(--border);color:var(--text-dim);}
+  .layer .lt strong{display:block;font-size:14px;}
+  .layer .lt span{font-size:12px;color:var(--text-faint);}
+  .layer:hover{transform:translateX(4px);transition:transform .25s ease;}
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:90px 24px;}
+  .section-head{max-width:600px;margin:0 auto 52px;text-align:center;}
+  .section-head .kicker{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent-2);
+    letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;display:block;
+  }
+  .section-head h2{font-size:clamp(26px,3.4vw,36px);letter-spacing:-0.02em;margin-bottom:14px;}
+  .section-head p{color:var(--text-dim);font-size:15.5px;line-height:1.6;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- FEATURES ---------- */
+  .features{background:var(--bg-elevated);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .feature-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .feature-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px 22px;transition:transform .25s ease, border-color .25s ease;
+  }
+  .feature-card:hover{transform:translateY(-6px);border-color:var(--border-strong);}
+  .feature-card .fi{
+    width:40px;height:40px;border-radius:10px;background:var(--accent-soft);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;
+  }
+  .feature-card h3{font-size:16px;margin-bottom:8px;}
+  .feature-card p{font-size:13.5px;color:var(--text-dim);line-height:1.6;}
+
+  @media (max-width:900px){.feature-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.feature-grid{grid-template-columns:1fr;}}
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{
+    max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch;
+  }
+  .price-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:18px;
+    padding:32px 26px;display:flex;flex-direction:column;position:relative;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .price-card:hover{transform:translateY(-8px);box-shadow:var(--shadow);}
+  .price-card.featured{
+    border-color:var(--accent);background:linear-gradient(180deg,var(--accent-soft),var(--bg-card) 40%);
+  }
+  .badge-pop{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#fff;
+    font-size:11.5px;font-weight:700;padding:5px 14px;border-radius:100px;letter-spacing:0.03em;
+  }
+  .price-card .ptier{font-size:13px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+  .price-card .pnum{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:500;margin-bottom:2px;}
+  .price-card .pnum span{font-size:14px;color:var(--text-faint);font-weight:400;}
+  .price-card .pdesc{font-size:13px;color:var(--text-faint);margin-bottom:24px;}
+  .price-card ul{margin-bottom:28px;flex-grow:1;}
+  .price-card li{
+    display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text-dim);
+    padding:8px 0;border-bottom:1px dashed var(--border);
+  }
+  .price-card li:last-child{border-bottom:none;}
+  .price-card li svg{width:15px;height:15px;flex-shrink:0;margin-top:2px;color:var(--accent-2);}
+  .price-card .btn{width:100%;justify-content:center;}
+
+  @media (max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:420px;}}
+
+  /* ---------- FAQ ---------- */
+  .faq-list{max-width:700px;margin:0 auto;}
+  .faq-item{border-bottom:1px solid var(--border);}
+  .faq-q{
+    width:100%;text-align:left;background:none;border:none;color:var(--text);
+    font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:600;
+    padding:20px 4px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;
+  }
+  .faq-q .plus{font-size:18px;color:var(--accent-2);transition:transform .3s ease;flex-shrink:0;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+  .faq-a p{padding:0 4px 20px;color:var(--text-dim);font-size:14px;line-height:1.65;}
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    max-width:1180px;margin:0 auto;background:linear-gradient(120deg,var(--accent),#4B3FB8);
+    border-radius:22px;padding:56px 40px;text-align:center;color:#fff;position:relative;overflow:hidden;
+  }
+  html[data-theme="light"] .cta-band{background:linear-gradient(120deg,var(--accent),#3E32A0);}
+  .cta-band h2{font-size:clamp(24px,3.4vw,32px);margin-bottom:14px;letter-spacing:-0.02em;}
+  .cta-band p{opacity:0.85;font-size:15px;margin-bottom:30px;}
+  .cta-band .btn-ghost{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.3);color:#fff;}
+  .cta-band .btn-ghost:hover{background:rgba(255,255,255,0.2);}
+  .cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--border);padding:48px 24px 28px;}
+  .footer-grid{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;margin-bottom:32px;}
+  .footer-col h4{font-size:13px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;}
+  .footer-col a{display:block;font-size:14px;color:var(--text-dim);margin-bottom:10px;transition:color .2s;}
+  .footer-col a:hover{color:var(--text);}
+  .footer-bottom{max-width:1180px;margin:0 auto;padding-top:24px;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--text-faint);}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .layer-visual{height:300px;margin-top:20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <div class="stack"><span></span><span></span><span></span></div>
+      Piel Hosting
+    </div>
+    <ul class="nav-links">
+      <li><a href="#beranda">Beranda</a></li>
+      <li><a href="#layanan">Layanan</a></li>
+      <li><a href="#harga">Harga</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="https://discord.gg/pielhosting" class="btn btn-discord btn-small" target="_blank" rel="noopener">
+        💬 Discord
+      </a>
+      <a href="https://wa.me/6281234567890" class="btn btn-whatsapp btn-small" target="_blank" rel="noopener">
+        📱 WhatsApp
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#beranda">Beranda</a>
+    <a href="#layanan">Layanan</a>
+    <a href="#harga">Harga</a>
+    <a href="#faq">FAQ</a>
+    <div class="mm-actions">
+      <a href="https://discord.gg/pielhosting" class="btn btn-discord" style="flex:1;justify-content:center" target="_blank" rel="noopener">Discord</a>
+      <a href="https://wa.me/6281234567890" class="btn btn-whatsapp" style="flex:1;justify-content:center" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="beranda">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> Uptime 99.9% · Support 24 Jam</span>
+      <h1>Server yang dibangun<br><span class="accent-word">lapis demi lapis</span>,<br>bukan asal jalan.</h1>
+      <p class="lead">Piel Hosting menyusun setiap layer infrastruktur — jaringan, keamanan, backup, dan support — supaya project kamu tetap hidup walau satu lapisan lagi diuji. Cocok buat website, bot, dan server game.</p>
+      <div class="hero-ctas">
+        <a href="https://discord.gg/pielhosting" class="btn btn-discord btn-lg" target="_blank" rel="noopener">💬 Gabung Discord</a>
+        <a href="https://wa.me/6281234567890" class="btn btn-whatsapp btn-lg" target="_blank" rel="noopener">📱 Chat WhatsApp</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>99.9%</b><span>Uptime terjaga</span></div>
+        <div class="stat"><b>&lt;15ms</b><span>Ping lokal ID</span></div>
+        <div class="stat"><b>2.400+</b><span>Server aktif</span></div>
+        <div class="stat"><b>5 mnt</b><span>Rata-rata respon tiket</span></div>
+      </div>
+    </div>
+    <div class="layer-visual">
+      <div class="layer"><div class="layer-icon">🛡️</div><div class="lt"><strong>Layer Keamanan</strong><span>DDoS protection aktif</span></div></div>
+      <div class="layer"><div class="layer-icon">💾</div><div class="lt"><strong>Layer Backup</strong><span>Snapshot harian otomatis</span></div></div>
+      <div class="layer"><div class="layer-icon">⚡</div><div class="lt"><strong>Layer Performa</strong><span>NVMe + CPU dedicated</span></div></div>
+      <div class="layer"><div class="layer-icon">🌐</div><div class="lt"><strong>Layer Jaringan</strong><span>Node Jakarta & Singapura</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="layanan">
+  <div class="section-head reveal">
+    <span class="kicker">Kenapa Piel</span>
+    <h2>Setiap lapisan punya tugasnya sendiri</h2>
+    <p>Bukan cuma "hosting murah" — ini susunan sistem yang saling menopang, supaya kamu nggak was-was tiap ada trafik naik atau serangan iseng.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card reveal"><div class="fi">⚡</div><h3>NVMe Full Speed</h3><p>Storage NVMe di semua paket, baca-tulis data jauh lebih cepat dari SSD biasa.</p></div>
+    <div class="feature-card reveal"><div class="fi">🛡️</div><h3>Anti-DDoS Bawaan</h3><p>Proteksi serangan lapis jaringan aktif otomatis tanpa biaya tambahan.</p></div>
+    <div class="feature-card reveal"><div class="fi">🔁</div><h3>Auto Backup Harian</h3><p>Snapshot otomatis tiap hari, tinggal restore kalau ada yang salah konfigurasi.</p></div>
+    <div class="feature-card reveal"><div class="fi">🎮</div><h3>Panel Ramah Pemula</h3><p>Kelola server dari panel web tanpa perlu jago command line.</p></div>
+  </div>
+</section>
+
+<section id="harga">
+  <div class="section-head reveal">
+    <span class="kicker">Harga</span>
+    <h2>Pilih lapisan sesuai kebutuhan</h2>
+    <p>Semua paket bisa upgrade kapan saja tanpa migrasi data. Bayar bulanan, berhenti kapan saja.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="ptier">Starter</div>
+      <div class="pnum">Rp15rb<span>/bulan</span></div>
+      <div class="pdesc">Buat coba-coba atau server kecil komunitas.</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>1 GB RAM · 10 GB NVMe</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Backup mingguan</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Support via tiket</li>
+      </ul>
+      <a href="https://wa.me/6281234567890?text=Halo%20mau%20tanya%20paket%20Starter" class="btn btn-ghost" target="_blank" rel="noopener">Pilih Starter</a>
+    </div>
+    <div class="price-card featured reveal">
+      <span class="badge-pop">Paling Populer</span>
+      <div class="ptier">Populer</div>
+      <div class="pnum">Rp45rb<span>/bulan</span></div>
+      <div class="pdesc">Cocok untuk server komunitas aktif atau website utama.</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>4 GB RAM · 40 GB NVMe</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Backup harian otomatis</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Anti-DDoS prioritas</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Support 24 jam via Discord</li>
+      </ul>
+      <a href="https://wa.me/6281234567890?text=Halo%20mau%20tanya%20paket%20Populer" class="btn btn-discord" target="_blank" rel="noopener">Pilih Populer</a>
+    </div>
+    <div class="price-card reveal">
+      <div class="ptier">Pro</div>
+      <div class="pnum">Rp99rb<span>/bulan</span></div>
+      <div class="pdesc">Untuk project besar dan trafik tinggi.</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>8 GB RAM · 100 GB NVMe</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Backup 2x sehari</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Dedicated IP</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Prioritas antrian support</li>
+      </ul>
+      <a href="https://wa.me/6281234567890?text=Halo%20mau%20tanya%20paket%20Pro" class="btn btn-ghost" target="_blank" rel="noopener">Pilih Pro</a>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-head reveal">
+    <span class="kicker">FAQ</span>
+    <h2>Masih ada yang mau ditanyakan?</h2>
+  </div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <button class="faq-q">Apakah bisa upgrade paket kapan saja? <span class="plus">+</span></button>
+      <div class="faq-a"><p>Bisa. Upgrade langsung dari panel atau chat admin, data server tidak akan hilang atau perlu migrasi ulang.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Metode pembayaran apa saja yang didukung? <span class="plus">+</span></button>
+      <div class="faq-a"><p>Transfer bank, e-wallet (Dana, OVO, GoPay), dan QRIS. Konfirmasi otomatis lewat bot Discord.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Kalau server down, berapa lama respon supportnya? <span class="plus">+</span></button>
+      <div class="faq-a"><p>Rata-rata tiket direspon dalam 5 menit lewat Discord, dan tim jaga bergantian 24 jam penuh.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Ada garansi uang kembali? <span class="plus">+</span></button>
+      <div class="faq-a"><p>Ada garansi 3 hari pertama untuk paket baru, kalau memang tidak sesuai kebutuhan.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="cta-band reveal">
+    <h2>Mau lihat langsung sebelum daftar?</h2>
+    <p>Chat admin di WhatsApp atau mampir ke server Discord kami, gratis konsultasi paket yang paling cocok.</p>
+    <div class="cta-actions">
+      <a href="https://discord.gg/pielhosting" class="btn btn-ghost btn-lg" target="_blank" rel="noopener">💬 Gabung Discord</a>
+      <a href="https://wa.me/6281234567890" class="btn btn-lg" style="background:#fff;color:#4B3FB8" target="_blank" rel="noopener">📱 Chat WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col" style="max-width:260px">
+      <div class="logo" style="margin-bottom:10px"><div class="stack"><span></span><span></span><span></span></div>Piel Hosting</div>
+      <p style="font-size:13.5px;color:var(--text-faint);line-height:1.6;">Infrastruktur hosting yang dibangun lapis demi lapis, untuk website dan server game kamu.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Layanan</h4>
+      <a href="#layanan">Web Hosting</a>
+      <a href="#layanan">Game Server</a>
+      <a href="#layanan">VPS</a>
+    </div>
+    <div class="footer-col">
+      <h4>Perusahaan</h4>
+      <a href="#harga">Harga</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Hubungi Kami</h4>
+      <a href="https://discord.gg/pielhosting" target="_blank" rel="noopener">Discord</a>
+      <a href="https://wa.me/6281234567890" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Piel Hosting. Semua hak dilindungi.</span>
+    <span>Dibuat dengan lapisan yang rapi.</span>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle
+  const root = document.documentElement;
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('open'); i.querySelector('.faq-a').style.maxHeight = null; });
+      if (!isOpen) { item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
